@@ -1,14 +1,14 @@
 const port = 5000;
-const express = require( "express" );
-const { createServer } = require( "http" );
-const { Server } = require( "socket.io" );
 
+const express = require( "express" );
 const app = express();
-const httpServer = createServer( app );
-const io = new Server( httpServer );
+const http = require( "http" ).createServer(app);
+const io = require( "socket.io" )(http);
+
+app.use( express.static( "public" ) );
 
 io.on( "connect", ( socket ) => {
     console.log( "socket", socket );
 } );
 
-httpServer.listen( port );
+http.listen( port );
