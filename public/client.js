@@ -2,7 +2,7 @@ let socketUrl;
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
   socketUrl = 'ws://localhost:5000';
 } else {
-  socketUrl = 'ws://ksnserver.onrender.com:5000';
+  socketUrl = 'https://ksnserver.onrender.com:5000';
 }
 
 const socket = io( socketUrl );
