@@ -1,1 +1,6 @@
-console.log( "Hello bro - you ok ?" );
+const express = require( "express" );
+const app = express();
+const port = 5000;
+app.listen( port, () => {
+    console.log("YOUPI")
+} )
