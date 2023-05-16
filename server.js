@@ -34,3 +34,9 @@ function ShowNumClients() {
 
 http.listen( port );
  
+if ( process.env.NODE_ENV === 'production' ) {
+    console.log("Application is SERVER");
+} else {
+    console.log("Application is LOCALHOST");
+}
+
