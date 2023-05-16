@@ -16,7 +16,14 @@ io.on( "connect", ( socket ) => {
 
 updateClients();
 function updateClients() {
-    const seconds = new Date().getSeconds();
+    let seconds = new Date().getSeconds();
+
+    if ( process.env.NODE_ENV === 'production' ) {
+        seconds = 'Application is SERVER';
+    } else {
+        seconds = 'Application is LOCALHOST';
+    }
+ 
     io.emit( 'numClientsResponse', seconds );
     setTimeout( updateClients, 1000 );
 }
@@ -26,3 +33,4 @@ function ShowNumClients() {
 }
 
 http.listen( port );
+ 
