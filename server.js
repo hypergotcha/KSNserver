@@ -10,7 +10,7 @@ app.use( express.static( "public" ) );
 io.on( "connect", ( socket ) => {
     console.log( 'NEW CONNECTION from ', socket.id, ShowNumClients() );
     socket.on( 'disconnect', () => {
-        console.log('DISCONNECTION  from ', socket.id, ShowNumClients() );
+        console.log('DISCONNECTION  from: ', socket.id, ShowNumClients() );
     } );
 } );
 
