@@ -1,6 +1,14 @@
-const express = require( "express" );
-const app = express();
 const port = 5000;
-app.listen( port, () => {
-    console.log("YOUPI")
-} )
+const express = require( "express" );
+const { createServer } = require( "http" );
+const { Server } = require( "socket.io" );
+
+const app = express();
+const httpServer = createServer( app );
+const io = new Server( httpServer );
+
+io.on( "connect", ( socket ) => {
+    console.log( "socket", socket );
+} );
+
+httpServer.listen( port );
