@@ -19,9 +19,9 @@ function updateClients() {
     let seconds = new Date().getSeconds();
 
     if ( process.env.NODE_ENV === 'production' ) {
-        seconds = 'Application is SERVER';
+        seconds = 'Application is SERVER '+seconds;
     } else {
-        seconds = 'Application is LOCALHOST';
+        seconds = 'Application is LOCALHOST '+seconds;
     }
  
     io.emit( 'numClientsResponse', seconds );
