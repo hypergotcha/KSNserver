@@ -15,7 +15,7 @@ app.use( express.static( "public" ) );
 
 io.on( "connect", ( socket ) => {
 
-    const clientIP = socket.request.connection.remoteAddress;
+    const clientIP = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
 
     console.log( 'NEW CONNECTION from ', socket.id, "IP:", clientIP, ShowNumClients() );
 
