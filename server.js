@@ -12,8 +12,8 @@ const io = require( "socket.io" )( http, {
 } );
 
 const limiter = rateLimit( {
-    windowMs: 60 * 1000, // 1 minute
-    max: 10, // limit each IP to 10 requests per windowMs
+    windowMs: 2000,
+    max: 1, // limit each IP to max requests per windowMs
     message: "Too many requests from this IP, please try again later",
 } );
 
