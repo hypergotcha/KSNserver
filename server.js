@@ -15,7 +15,9 @@ app.use( express.static( "public" ) );
 
 io.on( "connect", ( socket ) => {
 
-    console.log( 'NEW CONNECTION from ', socket.id, ShowNumClients() );
+    const clientIP = socket.request.connection.remoteAddress;
+
+    console.log( 'NEW CONNECTION from ', socket.id, "IP:", clientIP, ShowNumClients() );
 
     socket.on( 'disconnect', () => {
         console.log('DISCONNECTION  from: ', socket.id, ShowNumClients() );

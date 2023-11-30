@@ -5,6 +5,7 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
   socketUrl = 'https://ksnserver.onrender.com:443';
 }
 
+
 var socket = io( socketUrl );
 socket.on( "connect", () => {
     console.log( "CONNECTED !" );
@@ -14,8 +15,8 @@ socket.on( "connect", () => {
       });
 } );
 
-setTimeout( sendPing, 1000 );
+//setTimeout( sendPing, 1000 );
 function sendPing() {
-  socket.emit( 'pinging', 567 );
+  socket.emit( 'pinging to the moon', 567 );
   setTimeout( sendPing, 1000 );
 }
