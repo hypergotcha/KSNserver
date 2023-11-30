@@ -5,19 +5,23 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
   socketUrl = 'https://ksnserver.onrender.com:443';
 }
 
-socketUrl = 'https://ksnserver.onrender.com:443';
-
 var socket = io( socketUrl );
-socket.on( "connect", () => {
-    console.log( "CONNECTED !" );
-    socket.emit( 'joining' );
-    socket.on( 'communicate' , (data) => {
-        document.getElementById( 'mainText' ).text = JSON.stringify(data);
-      });
-} );
 
-//setTimeout( sendPing, 1000 );
-function sendPing() {
-  socket.emit( 'pinging to the moon', 567 );
-  setTimeout( sendPing, 1000 );
+// socket.on( "connect", () => {
+//     console.log( "CONNECTED !" );
+//     socket.emit( 'joining' );
+//     socket.on( 'communicate' , (data) => {
+//         document.getElementById( 'mainText' ).text = JSON.stringify(data);
+//       });
+// } );
+
+var timeStep = 20;
+
+setTimeout( askServer, timeStep );
+function askServer() {
+  socket.emit( 'askInfo', Date.now() );
+  socket.on( 'answerInfo' , (data) => {
+    document.getElementById( 'mainText' ).text = data;
+  });
+  setTimeout( askServer, timeStep );
 }
