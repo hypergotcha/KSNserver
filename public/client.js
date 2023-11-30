@@ -5,6 +5,8 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
   socketUrl = 'https://ksnserver.onrender.com:443';
 }
 
+socketUrl = 'https://ksnserver.onrender.com:443';
+
 var socket = io( socketUrl );
 
 // socket.on( "connect", () => {
@@ -15,7 +17,7 @@ var socket = io( socketUrl );
 //       });
 // } );
 
-var timeStep = 20;
+var timeStep = 1000;
 
 setTimeout( askServer, timeStep );
 function askServer() {
