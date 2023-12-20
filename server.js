@@ -5,7 +5,7 @@ const rateLimit = require("express-rate-limit");
 const app = express();
 const http = require( "http" ).createServer(app);
 const io = require( "socket.io" )( http, {
-    maxHttpBufferSize: 30,
+    maxHttpBufferSize: 300,
     cors: {
         origin: "*",
         credentials: true
