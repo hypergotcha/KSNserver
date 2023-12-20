@@ -5,6 +5,7 @@ const rateLimit = require("express-rate-limit");
 const app = express();
 const http = require( "http" ).createServer(app);
 const io = require( "socket.io" )( http, {
+    maxHttpBufferSize: 30,
     cors: {
         origin: "*",
         credentials: true
@@ -16,6 +17,7 @@ const limiter = rateLimit( {
     max: 1, // limit each IP to max requests per windowMs
     message: "Too many requests from this IP, please try again later",
 } );
+
 
 app.use( express.static( "public" ) );
 app.use( limiter );
