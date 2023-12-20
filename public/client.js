@@ -21,7 +21,7 @@ var timeStep = 1000;
 let counter = 0;
 setTimeout( askServer, timeStep );
 function askServer() {
-  socket.emit( 'askInfo', "> "+counter++ );
+  //socket.emit( 'askInfo2', "> "+counter++ );
   socket.on( 'answerInfo' , (data) => {
     document.getElementById( 'mainText' ).text = data;
   });

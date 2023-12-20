@@ -41,6 +41,7 @@ io.on( "connect", ( socket ) => {
 
     // RECEIVE EMIT CALL
     socket.use( ( packet, next ) => {
+        console.log( "GOT > " + packet[0] );
         rateLimiter.consume(socket.handshake.address)
         .then(() => {
           console.log('Emit allowed:', socket.id, 'Event:', packet[0]);
