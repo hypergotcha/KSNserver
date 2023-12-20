@@ -12,6 +12,8 @@ const io = require( "socket.io" )( http, {
     }
 } );
 
+app.set( 'trust proxy', true );
+
 const limiter = rateLimit( {
     windowMs: 1000,
     max: 2, // limit each IP to max requests per windowMs
@@ -23,8 +25,8 @@ const limiter = rateLimit( {
 } );
 
 
-app.use( limiter );
-app.use( express.static( "public" ) );
+app.use(express.static("public"));
+app.use(limiter);
 
 io.on( "connect", ( socket ) => {
 
