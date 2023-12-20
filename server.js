@@ -14,7 +14,7 @@ const io = require( "socket.io" )( http, {
 
 const limiter = rateLimit( {
     windowMs: 2000,
-    max: 1, // limit each IP to max requests per windowMs
+    max: 1000, // limit each IP to max requests per windowMs
     message: "Too many requests from this IP, please try again later",
     handler: (req, res) => {
         console.log(`AAA from IP ${req.ip} has been limited.`);
