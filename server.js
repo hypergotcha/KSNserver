@@ -1,7 +1,7 @@
 const port = 443;
 
 const express = require( "express" );
-const rateLimit = require("express-rate-limit");
+const { RateLimiterMemory } = require("rate-limiter-flexible");
 const app = express();
 const http = require( "http" ).createServer(app);
 const io = require( "socket.io" )( http, {
@@ -14,6 +14,12 @@ const io = require( "socket.io" )( http, {
 
 app.set( 'trust proxy', true );
 
+const rateLimiter = new RateLimiterMemory({
+    points: 2,
+    duration: 1,
+  });
+  
+/*
 const limiter = rateLimit( {
     windowMs: 1000,
     max: 2, // limit each IP to max requests per windowMs
@@ -23,21 +29,36 @@ const limiter = rateLimit( {
         res.status(429).json({ error: "BBB, please try again later" });
     },
 } );
-
+*/
 
 app.use(express.static("public"));
-app.use(limiter);
+app.use(rateLimiter);
 
 io.on( "connect", ( socket ) => {
 
+    // CONNECTION
     const clientIP = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
-
     console.log( 'NEW CONNECTION from ', socket.id, "IP:", clientIP, ShowNumClients() );
 
+    // RECEIVE EMIT CALL
+    socket.use( ( packet, next ) => {
+        rateLimiter.consume(socket.handshake.address)
+        .then(() => {
+          console.log('Emit allowed:', socket.id, 'Event:', packet[0]);
+          next();
+        })
+        .catch((rejRes) => {
+          console.log('Emit REJECTED:', socket.id, 'Event:', packet[0]);
+          next(new Error('TOO MANY EMIT CALLS from this IP, please try again later'));
+        });
+    } );
+
+    // DISCONNECTION LISTENER
     socket.on( 'disconnect', () => {
         console.log('DISCONNECTION  from: ', socket.id, ShowNumClients() );
     } );
 
+    // JOINING LISTENER
     socket.on( 'joining', ( data ) => {
         console.log( "JOINED!" );
     } );
@@ -54,7 +75,7 @@ if ( process.env.NODE_ENV === 'production' ) {
 } else {
     console.log("Application is LOCALHOST");
 }
-
+/*
 // Middleware to log incoming messages
 io.use((socket, next) => {
     socket.onAny( ( eventName, ...args ) => {
@@ -71,7 +92,7 @@ io.use((socket, next) => {
 } );
 
 
-/*
+
 updateClients();
 function updateClients() {
     let seconds = new Date().getSeconds();
