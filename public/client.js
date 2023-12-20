@@ -21,7 +21,7 @@ var timeStep = 200;
 
 setTimeout( askServer, timeStep );
 function askServer() {
-  socket.emit( 'askInfo', Date.now() );
+  socket.emit( 'askInfo', "ASD" );
   socket.on( 'answerInfo' , (data) => {
     document.getElementById( 'mainText' ).text = data;
   });

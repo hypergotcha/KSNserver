@@ -16,6 +16,10 @@ const limiter = rateLimit( {
     windowMs: 2000,
     max: 1, // limit each IP to max requests per windowMs
     message: "Too many requests from this IP, please try again later",
+    handler: (req, res) => {
+        console.log(`AAA from IP ${req.ip} has been limited.`);
+        res.status(429).json({ error: "BBB, please try again later" });
+    },
 } );
 
 
