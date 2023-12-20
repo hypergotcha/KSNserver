@@ -17,11 +17,11 @@ var socket = io( socketUrl );
 //       });
 // } );
 
-var timeStep = 1000;
+var timeStep = 100;
 
 setTimeout( askServer, timeStep );
 function askServer() {
-  socket.emit( 'askInfo', "ASD" );
+  socket.emit( 'askInfo', "QWER" );
   socket.on( 'answerInfo' , (data) => {
     document.getElementById( 'mainText' ).text = data;
   });

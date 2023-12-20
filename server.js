@@ -23,8 +23,8 @@ const limiter = rateLimit( {
 } );
 
 
-app.use( express.static( "public" ) );
 app.use( limiter );
+app.use( express.static( "public" ) );
 
 io.on( "connect", ( socket ) => {
 
