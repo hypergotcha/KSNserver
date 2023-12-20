@@ -55,6 +55,22 @@ if ( process.env.NODE_ENV === 'production' ) {
     console.log("Application is LOCALHOST");
 }
 
+// Middleware to log incoming messages
+io.use((socket, next) => {
+    socket.onAny( ( eventName, ...args ) => {
+        //let time = new Date().toISOString();
+        //console.log(`Received event '${eventName}' from ${socket.id}: at ${time}`, args);
+
+        if (eventName === 'askInfo') {
+            console.log( 'Data received:', args );
+            const responseData = args.map(value => value * 2);
+            socket.emit('answerInfo', responseData);
+        }
+    });
+    next();
+} );
+
+
 /*
 updateClients();
 function updateClients() {
@@ -77,19 +93,4 @@ function updateClients() {
     io.emit( 'communicate', centers );
     setTimeout( updateClients, 1000 );
 }
-
-// Middleware to log incoming messages
-io.use((socket, next) => {
-    socket.onAny( ( eventName, ...args ) => {
-        //let time = new Date().toISOString();
-        //console.log(`Received event '${eventName}' from ${socket.id}: at ${time}`, args);
-
-        if (eventName === 'askInfo') {
-            console.log( 'Data received:', args );
-            const responseData = args.map(value => value * 2);
-            socket.emit('answerInfo', responseData);
-        }
-    });
-    next();
-} );
 */
