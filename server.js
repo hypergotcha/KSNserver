@@ -42,6 +42,19 @@ io.on( "connect", ( socket ) => {
         console.log( "JOINED!" );
     } );
 } );
+
+function ShowNumClients() {
+    return '(' + io.engine.clientsCount + ')';
+}
+
+http.listen( port );
+ 
+if ( process.env.NODE_ENV === 'production' ) {
+    console.log("Application is SERVER OK");
+} else {
+    console.log("Application is LOCALHOST");
+}
+
 /*
 updateClients();
 function updateClients() {
@@ -63,18 +76,6 @@ function updateClients() {
 
     io.emit( 'communicate', centers );
     setTimeout( updateClients, 1000 );
-}
-
-function ShowNumClients() {
-    return '(' + io.engine.clientsCount + ')';
-}
-
-http.listen( port );
- 
-if ( process.env.NODE_ENV === 'production' ) {
-    console.log("Application is SERVER OK");
-} else {
-    console.log("Application is LOCALHOST");
 }
 
 // Middleware to log incoming messages
