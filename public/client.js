@@ -17,11 +17,11 @@ var socket = io( socketUrl );
 //       });
 // } );
 
-var timeStep = 100;
+var timeStep = 2000;
 
 setTimeout( askServer, timeStep );
 function askServer() {
-  socket.emit( 'askInfo', "QWER" );
+  socket.emit( 'askInfo', "POI" );
   socket.on( 'answerInfo' , (data) => {
     document.getElementById( 'mainText' ).text = data;
   });

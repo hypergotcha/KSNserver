@@ -42,7 +42,7 @@ io.on( "connect", ( socket ) => {
         console.log( "JOINED!" );
     } );
 } );
-
+/*
 updateClients();
 function updateClients() {
     let seconds = new Date().getSeconds();
@@ -90,4 +90,5 @@ io.use((socket, next) => {
         }
     });
     next();
-});
+} );
+*/
