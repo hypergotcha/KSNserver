@@ -32,7 +32,6 @@ const limiter = rateLimit( {
 */
 
 app.use(express.static("public"));
-app.use(rateLimiter);
 
 io.on( "connect", ( socket ) => {
 
