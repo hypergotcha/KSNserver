@@ -1,18 +1,19 @@
-const port = 443;
-
 const express = require( "express" );
 const { RateLimiterMemory } = require("rate-limiter-flexible");
-const app = express();
-const http = require( "http" ).createServer(app);
-const io = require( "socket.io" )( http, {
+const http = require( "http" );
+
+const app = express().set( 'trust proxy', true );
+const port = process.env.PORT || 443;
+
+const server = http.createServer( app );
+
+const io = require( "socket.io" )( server, {
     maxHttpBufferSize: 300,
     cors: {
         origin: "*",
         credentials: true
     }
 } );
-
-app.set( 'trust proxy', true );
 
 const rateLimiter = new RateLimiterMemory({
     points: 2,
@@ -123,7 +124,7 @@ function ShowNumClients() {
     return '(' + io.engine.clientsCount + ')';
 }
 
-http.listen( port );
+server.listen( port );
  
 if ( process.env.NODE_ENV === 'production' ) {
     console.log("Application is SERVER OK");
