@@ -33,29 +33,84 @@ const limiter = rateLimit( {
 
 app.use(express.static("public"));
 
-io.on( "connect", ( socket ) => {
+const GRID_SIZE = 4;
+const clients = {};
 
+io.on( 'connection', ( socket ) => {
+/*
     // CONNECTION
+    rateLimiter.consume( socket.handshake.address )
+        .then( () => {
+
+        } )
+        .catch( () => {
+
+        } );
     const clientIP = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
     console.log( 'NEW CONNECTION from ', socket.id, "IP:", clientIP, ShowNumClients() );
 
     // RECEIVE EMIT CALL
     socket.use( ( packet, next ) => {
-        console.log( "GOT > " + packet[0] );
-        rateLimiter.consume(socket.handshake.address)
-        .then(() => {
-          console.log('Emit allowed:', socket.id, 'Event:', packet[0]);
-          next();
-        })
-        .catch((rejRes) => {
-          console.log('Emit REJECTED:', socket.id, 'Event:', packet[0]);
-          next(new Error('TOO MANY EMIT CALLS from this IP, please try again later'));
-        });
+        console.log( "GOT EMITTED > " + packet[0] );
+        rateLimiter.consume( socket.handshake.address )
+            .then( () => {
+                console.log( 'Emit allowed:', socket.id, 'Event:', packet[0] );
+                next();
+            } )
+            .catch( ( rejRes ) => {
+                console.log( 'Emit REJECTED:', socket.id, 'Event:', packet[0] );
+                next( new Error( 'TOO MANY EMIT CALLS from this IP, please try again later' ) );
+            } );
     } );
+*/
+
+    // Display number of connected clients
+    console.log( ShowNumClients(), socket.id, socket.client.id );
+
+    // MOVE LOGIC
+    clients[socket.id] = { x: 0, y: 0 };
+    socket.on('move', (direction) => {
+        
+        const currentPos = clients[socket.id];
+        let newX = currentPos.x;
+        let newY = currentPos.y;
+        let allowed = true;
+
+        switch (direction) {
+            case 'up':
+                if (currentPos.y > 0) newY -= 1;
+                else allowed = false;
+                break;
+            case 'down':
+                if (currentPos.y < GRID_SIZE - 1) newY += 1;
+                else allowed = false;
+                break;
+            case 'left':
+                if (currentPos.x > 0) newX -= 1;
+                else allowed = false;
+                break;
+            case 'right':
+                if (currentPos.x < GRID_SIZE - 1) newX += 1;
+                else allowed = false;
+                break;
+            default:
+                allowed = false;
+                break;
+        }
+
+        if (allowed) {
+            clients[socket.id] = { x: newX, y: newY };
+            socket.emit('moveResponse', { status: 'allowed', position: clients[socket.id] });
+        } else {
+            socket.emit('moveResponse', { status: 'refused', position: currentPos });
+        }
+    });
+
 
     // DISCONNECTION LISTENER
     socket.on( 'disconnect', () => {
-        console.log('DISCONNECTION  from: ', socket.id, ShowNumClients() );
+        console.log( 'DISCONNECTION  from: ', socket.id );
+        console.log( ShowNumClients() );
     } );
 
     // JOINING LISTENER
@@ -75,6 +130,8 @@ if ( process.env.NODE_ENV === 'production' ) {
 } else {
     console.log("Application is LOCALHOST");
 }
+
+
 /*
 // Middleware to log incoming messages
 io.use((socket, next) => {
