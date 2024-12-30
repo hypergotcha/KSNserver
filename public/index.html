@@ -1,19 +1,15 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Socket.IO Test</title>
+    <title>My Page</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </head>
 
 <body>
-    <h1>Socket.IO Test 3</h1>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.on( 'connect', () => {
-            console.log( 'Connected to server' );
-        } );
-    </script>
+    <script src="client.js"></script>
+    <div id="client-count">0</div>
 </body>
 
 </html>

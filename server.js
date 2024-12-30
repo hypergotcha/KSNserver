@@ -20,11 +20,19 @@ const io = new Server(server);
 io.on('connection', (socket) => {
   console.log('A client connected');
 
+  // Broadcast the updated number of connected clients to all clients
+  UpdateClients();
+    
   // Handle client disconnection
   socket.on('disconnect', () => {
+    UpdateClients();
     console.log('A client disconnected');
   });
 });
+
+function UpdateClients() {
+    io.emit('stats', io.engine.clientsCount);
+}
 
 // Start the server
 const PORT = process.env.PORT || 3000;
