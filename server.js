@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require( 'socket.io' );
 const redis = require('redis');
+const serverName = process.env.RENDER_SERVICE_NAME;
 
 // Create an Express app and HTTP server
 const app = express();
@@ -49,7 +50,7 @@ io.on('connection', (socket) => {
 });
 
 function UpdateClients() {
-  io.emit( 'stats', io.engine.clientsCount );
+  io.emit( 'stats', { name: serverName, count: io.engine.clientsCount } );
   updatePlayerCount(io.engine.clientsCount);
 }
 
