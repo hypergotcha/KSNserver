@@ -1,7 +1,8 @@
 // Import required modules
 const express = require('express');
 const http = require('http');
-const { Server } = require('socket.io');
+const { Server } = require( 'socket.io' );
+const redis = require('redis');
 
 // Create an Express app and HTTP server
 const app = express();
@@ -15,6 +16,23 @@ app.get('/', (req, res) => {
 
 // Initialize Socket.IO
 const io = new Server(server);
+
+// Create a Redis client
+const redisClient = redis.createClient({
+  url: 'redis://red-ctq0pq5ds78s73d7g73g:6379'
+} );
+
+// Handle Redis connection errors
+redisClient.on('error', (err) => {
+  console.error('Redis error:', err);
+} );
+
+// Connect to Redis
+redisClient.connect().then(() => {
+  console.log('Connected to Redis');
+}).catch((err) => {
+  console.error('Failed to connect to Redis:', err);
+} );
 
 // Handle client connections
 io.on('connection', (socket) => {
@@ -31,7 +49,20 @@ io.on('connection', (socket) => {
 });
 
 function UpdateClients() {
-    io.emit('stats', io.engine.clientsCount);
+  io.emit( 'stats', io.engine.clientsCount );
+  updatePlayerCount(io.engine.clientsCount);
+}
+
+// Function to update the player count in Redis
+async function updatePlayerCount(numClients) {
+
+  // Write the player count to Redis
+  try {
+      await redisClient.set('playerCount', numClients);
+      console.log(`Updated player count in Redis: ${numClients}`);
+  } catch (err) {
+      console.error('Failed to update player count in Redis:', err);
+  }
 }
 
 // Start the server
