@@ -5,6 +5,8 @@ const { Server } = require( 'socket.io' );
 const redis = require('redis');
 const serverName = process.env.RENDER_SERVICE_NAME;
 
+const clients = new Map();
+
 // Create an Express app and HTTP server
 const app = express();
 const server = http.createServer(app);
@@ -37,21 +39,25 @@ redisClient.connect().then(() => {
 
 // Handle client connections
 io.on('connection', (socket) => {
-  console.log('A client connected');
+  console.log( 'A client connected' );
+  
+  // Add the client to the clients list
+  clients.set(socket.id, socket);
 
   // Broadcast the updated number of connected clients to all clients
   UpdateClients();
     
   // Handle client disconnection
-  socket.on('disconnect', () => {
+  socket.on( 'disconnect', () => {
+    clients.delete(socket.id);
     UpdateClients();
     console.log('A client disconnected');
   });
 });
 
 function UpdateClients() {
-  io.emit( 'stats', { name: serverName, count: io.engine.clientsCount } );
-  updatePlayerCount(io.engine.clientsCount);
+  io.emit( 'stats', { name: serverName, count: clients.size } );
+  updatePlayerCount(clients.size);
 }
 
 // Function to update the player count in Redis
